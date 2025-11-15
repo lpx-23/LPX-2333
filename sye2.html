@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星际故事</title>
+    <link rel="stylesheet" href="./font/iconfont.css">
+   
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+           
+        }
+
+        .main {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            position: relative;
+           
+            overflow: hidden;
+        }
+
+        .iconfont {
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            left: 27%;
+            z-index: 999;
+            font: 900 80px '';
+            color: #fff;
+        }
+
+        #up-btn {
+            top: 5%;
+        }
+
+        #down-btn {
+            bottom: 5%;
+        }
+
+        #content {
+            width: 30%;
+            height: 100%;
+            position: absolute;
+            left: 15%;
+            overflow: hidden;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+            transition: transform .8s ease-in-out;
+        }
+
+        .card-time {
+            font-size: 40px;
+            font-weight: 700;
+        }
+
+        .card-title {
+            font-size: 50px;
+            font-weight: 500;
+            padding-bottom: 10px;
+            border-bottom: 1px solid white;
+            margin-bottom: 10px;
+        }
+
+        .card-passage {
+            font-size: 24px;
+            font-weight: 300;
+        }
+
+        #clock {
+            height: 130%;
+            /* 纵横比为1:1 */
+            aspect-ratio: 1 / 1;
+            position: absolute;
+            right: -28%;
+            top: -15%;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            border: #ff9214 30px solid;
+        }
+
+        @media(max-width:1000px) {
+            #clock {
+                right: -90%;
+            }
+        }
+
+        #clock-table {
+            width: 96%;
+            height: 96%;
+            border-radius: 50%;
+            position: absolute;
+            top: 2%;
+            left: 2%;
+            transition: transform .8s ease-in-out;
+        }
+
+        .invisible-table {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            transform-origin: 50% 50%;
+            position: absolute;
+            transition:transform .8s cubic-bezier(1,0,.9,1.25);
+        }
+
+        .clock-thick {
+            width: 6%;
+            height: 6px;
+            background-color: #5053fc;
+            position: absolute;
+            top: calc(50% - 3px);
+            left: 0px;
+        }
+
+        .clock-thick span {
+            font-size: 50px;
+            position: absolute;
+            left: 140%;
+            top: calc(50% - 30px);
+            color: #5053fc;
+        }
+
+        .clock-scale {
+            width: 4%;
+            height: 2px;
+            background-color: #5053fc;
+            position: absolute;
+            top: calc(50% - .5px);
+            left: 0px;
+            
+        }
+
+        .title{
+        position: fixed;
+        top: 4%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 99;
+       
+    }
+    nav {
+        position        : relative;
+        width           : 470px;
+        height          : 50px;
+        background-color: #fff;
+        border-radius   : 8px;
+        box-shadow      : 0 2px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    nav a {
+        position   : relative;
+        display    : block;
+        float      : left;
+        font-size  : 15px;
+        line-height: 50px;
+
+        height             : 50px;
+        color              : rgb(70,100,180);
+        text-transform     : uppercase;
+        text-decoration    : none;
+        text-align         : center;
+        z-index            : 10;
+    }
+
+    nav a:nth-child(1) {
+        width: 100px;
+    }
+
+    nav a:nth-child(2) {
+        width: 110px;
+    }
+
+    nav a:nth-child(3) {
+        width: 100px;
+    }
+
+    nav a:nth-child(4) {
+        width: 160px;
+    }
+
+    nav .animation {
+        position        : absolute;
+        height          : 100%;
+        background-color: #F97F51;
+        z-index         : 9;
+        border-radius   : 8px;
+        transition: all 0.3s;
+        left: 105px;
+    }
+
+    .start-home,
+    nav a:nth-child(1):hover~.animation {
+        width: 100px;
+        left : 0px;
+    }
+    .start-about,
+    nav a:nth-child(2):hover~.animation {
+        width: 110px;
+        left : 100px;
+    }
+    .start-blog,
+    nav a:nth-child(3):hover~.animation {
+        width: 100px;
+        left : 210px;
+    }
+    .start-protfolio,
+    nav a:nth-child(4):hover~.animation {
+        width: 160px;
+        left : 310px;
+    }
+/*加载画面*/
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: fixed;
+            flex-direction: column;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #f7f7f7;
+            z-index: 100000000;
+            transition: 1s ease;
+        }
+
+        .loading svg {
+            width: 5rem;
+            margin-bottom: 2rem;
+            overflow: visible;
+            transition: 0.3s ease;
+        }
+
+        .loading svg circle {
+            fill: none;
+            stroke: #171717;
+            stroke-width: 12;
+            stroke-dasharray: 160;
+            stroke-dashoffset: 160;
+            transform-origin: center;
+            animation: circle_rotate 3s ease-in infinite;
+        }
+
+        @keyframes circle_rotate {
+            0% {
+                transform: rotate(0deg);
+                stroke-dashoffset: 160;
+            }
+
+            100% {
+                transform: rotate(360deg);
+                stroke-dashoffset: -160;
+            }
+        }
+
+        .loading p {
+            font-family: sans-serif;
+            font-size: 2rem;
+            color: #171717;
+            font-weight: 900;
+            transition: 0.3s ease;
+        }
+
+        .loading_out {
+            transform: translateY(100%);
+        }
+
+        .loading_out svg,
+        .loading_out p {
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading">
+        <svg viewbox='0 0 50 50'>
+            <circle r='25' cx='25' cy='25'></circle>
+        </svg>
+        <p style="font-size: 4vmin; margin-top: 0px;">LOADING</p>
+    </div>
+
+    <div class="title">
+        <nav>
+             <a onclick="loading.in('index.html')" >首页</a>
+            <a onclick="loading.in('sye2.html')" >星际故事</a>
+            <a onclick="loading.in('w.html')">太阳系</a>
+            <a onclick="loading.in('text4.html')">星际知识</a>
+            <div class="animation start-home"></div>
+        </nav>
+    </div>
+
+    <div class="main">
+        <video class="video-bg" autoplay loop muted playsinline>
+            <source src="tupian/背景3.mp4" type="video/mp4">
+        </video>
+    
+        <i class="iconfont icon-up" id="up-btn" onclick="slideToPrev()"></i>
+        <i class="iconfont icon-icon_arrow_dwon" id="down-btn" onclick="slideToNext()"></i>
+        <div id="content">
+            <div class="card">
+                <div class="card-time">
+                    1965
+                </div>
+                <div class="card-title">
+                    《沙丘》
+                </div>
+                <div class="card-passage">
+                    <br>
+                    我绝不能恐惧。恐惧是心灵杀手，恐惧是带来彻底毁灭的小小死神。我要直面我的恐惧，任由它穿过我的身体。当恐惧逝去，我会洞悉它的轨迹，恐惧所经之处，万物无存，唯我独立。
+                    <br>
+                    <br>
+                    I must not fear. Fear is the mind-killer. Fear is the little death that brings total obliteration. I will face my fear. I will permit it to pass over me and through me. And when it has gone past, I will turn the inner eye to see its path. Where the fear has gone there will be nothing. Only I will remain.
+                    <br>
+                    <br>
+                    <br>
+                    梦是来自内心深处的信息
+                    <br>
+                    <br>
+                    Dreams are messages from the deepest part of the soul.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-time">
+                    1977
+                </div>
+                <div class="card-title">
+                    《星球大战》
+                </div>
+                <div class="card-passage">
+                    <br>
+                    愿原力与你同在
+                    <br>
+                    <br>
+                    May the Force be with you.
+                    <br>
+                    <br>
+                    <br>
+                    无需激情，平静心智。勿随愚昧，顺从真知。勿纵情欲，沉静明意。无有灭亡，唯行原力。
+                    <br>
+                    <br>
+                    No passion, there is serenity. No ignorance, there is knowledge. No emotion, there is clarity. No death, there is the Force.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-time">
+                    2006
+                </div>
+                <div class="card-title">
+                    《三体》
+                </div>
+                <div class="card-passage">
+                    <br>
+                    宇宙就是一座黑暗森林，每个文明都是带枪的猎人。
+                    <br>
+                    <br>
+                    The universe is a dark forest, and every civilization is a hunter armed with a gun.
+                    <br>
+                    <br>
+                    <br>
+                    弱小和无知不是生存的障碍，傲慢才是。
+                    <br>
+                    <br>
+                    Weakness and ignorance are not barriers to survival; arrogance is.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-time">
+                    2014
+                </div>
+                <div class="card-title">
+                    《星际穿越》
+                </div>
+                <div class="card-passage">
+                    <br>
+                    爱是唯一可以超越时间与空间的事物
+                    <br>
+                    <br>
+                    Love is the only thing that can transcend time and space.
+                    <br>
+                    <br>
+                    <br>
+                    墨菲定律并不是说会有坏事发生，而是说只要有可能发生的事，就一定会发生。
+                    <br>
+                    <br>
+                    Murphy's Law doesn't mean that bad things will happen; it means that whatever can happen, will happen.
+                </div>
+            </div>
+        </div>
+
+        <div id="clock">
+            <div id="clock-center"></div>
+            <div id="clock-pointer"></div>
+            <div id="clock-table"></div>
+        </div>
+    </div>
+    <script>
+    
+    const loading = {
+        container: document.querySelector(".loading"),
+        in(target) {
+            this.container.classList.remove("loading_out");
+            setTimeout(() => {
+                window.location.href = target;
+            }, 1000)
+        },
+        out() {
+            this.container.classList.add("loading_out");
+        }
+    };
+    window.addEventListener("load", () => {
+        loading.out();
+    })
+</script>
+
+    <script>
+        // 定义变量
+        let offset = 0;
+        let maxOffset = 0;
+        let minOffset = -3;
+        // 获取所有卡片元素并存储在数组中
+        const slides = Array.from(document.querySelectorAll(".card"));
+        // 获取时钟表盘元素
+        const clock = document.querySelector("#clock-table");
+        // 设定起始年份
+        const customYears = [1964, 1965, 1977, 2006, 2014, 2025 ];
+        let yearIndex = 0; // 单独的年份索引
+        for (let i = -60; i < 300; i += 6) {
+        addClockScale(i);
+        if (i % 60 === 0) {
+            // 取数组里对应的年份，循环用完数组后可以重置索引
+            const year = customYears[yearIndex % customYears.length];
+            addThickClockScale(i, year);
+            yearIndex++; // 每次整点后索引+1
+        }
+        }
+
+        // 添加时钟刻度
+        function addClockScale(degree) {
+            // 创建一个隐藏的表格元素
+            const invisibleClockTable = document.createElement("div");
+            // 添加类名
+            invisibleClockTable.className = "invisible-table";
+            // 设置旋转角度
+            invisibleClockTable.style.transform = `rotate(${degree}deg)`;
+            // 创建时钟刻度元素
+            const clockScale = document.createElement("div");
+            // 添加类名
+            clockScale.className = "clock-scale";
+            // 将时钟刻度元素添加到表格中
+            invisibleClockTable.appendChild(clockScale);
+            // 将表格添加到时钟表盘中
+            clock.appendChild(invisibleClockTable);
+        }
+        // 添加粗刻度
+        function addThickClockScale(degree, time) {
+            // 创建一个隐藏的表格元素
+            const invisibleClockTable = document.createElement("div");
+            invisibleClockTable.className = "invisible-table";
+            invisibleClockTable.style.transform = `rotate(${degree}deg)`;
+            const thickClockScale = document.createElement("div");
+            thickClockScale.className = "clock-thick";
+            const scaleContent = document.createElement("span");
+            scaleContent.textContent = `${time}`;
+            thickClockScale.appendChild(scaleContent);
+            invisibleClockTable.appendChild(thickClockScale);
+            clock.appendChild(invisibleClockTable);
+        }
+        // 向前切换卡片
+        function slideToPrev() {
+            // 更新偏移量，取最大值
+            offset = Math.min(maxOffset, offset + 1);
+            slides.forEach(slide => {
+                // 根据偏移量设置卡片垂直偏移效果
+                slide.style.transform = `translateY(${offset * 100}%)`;
+            });
+            // 调用旋转时钟表盘函数
+            clockRotate(offset * 60);
+        }
+        // 向后切换卡片
+        function slideToNext() {
+            offset = Math.max(minOffset, offset - 1);
+            slides.forEach(slide => {
+                slide.style.transform = `translateY(${offset * 100}%)`;
+            });
+            clockRotate(offset * 60);
+        }
+        // 旋转时钟表盘
+        function clockRotate(degree) {
+            // 根据角度旋转时钟表盘
+            clock.style.transform = `rotate(${degree}deg)`;
+        }
+    </script>
+</body>
+
+</html>
