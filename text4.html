@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>太空科普选择题</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0a0a2a;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 0;
+            margin: 0;
+            position: relative;
+        }
+        .question-container {
+            position: fixed;
+            top: 30%;
+            background-color: #1a1a4a;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.5);
+            z-index: 1;
+        }
+        .option {
+            background-color: #2a2a6a;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #4a4a8a;
+        }
+        .option.correct {
+            background-color: #00ff00;
+        }
+        .option.wrong {
+            background-color: #ff0000;
+        }
+        #next-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background-color: #6495ed;
+            border: none;
+            border-radius: 5px;
+            color: #0a0a2a;
+            font-size: 16px;
+            cursor: pointer;
+            display: none;
+        }
+        #next-btn:hover {
+            background-color: #87cefa;
+        }
+        /* 保留的答案错误弹窗样式 */
+        .answer-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1a1a4a;
+            border: 2px solid #6495ed;
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-width: 500px;
+            z-index: 1000;
+            display: none;
+        }
+        .answer-modal h3 {
+            color: #ff0000;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .modal-close-btn {
+            margin-top: 15px;
+            padding: 8px 15px;
+            background-color: #6495ed;
+            border: none;
+            border-radius: 5px;
+            color: #0a0a2a;
+            cursor: pointer;
+        }
+
+        /*导航栏*/
+    .title{
+        position: fixed;
+        top: 4%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 99;
+       
+    }
+    nav {
+        position        : relative;
+        width           : 410px;
+        height          : 50px;
+        background-color: #fff;
+        border-radius   : 8px;
+        box-shadow      : 0 2px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    nav a {
+        position   : relative;
+        display    : block;
+        float      : left;
+        font-size  : 15px;
+        line-height: 50px;
+
+        height             : 50px;
+        color              : rgb(70,100,180);
+        text-transform     : uppercase;
+        text-decoration    : none;
+        text-align         : center;
+        z-index            : 10;
+    }
+
+    nav a:nth-child(1) {
+        width: 100px;
+    }
+
+    nav a:nth-child(2) {
+        width: 110px;
+    }
+
+    nav a:nth-child(3) {
+        width: 100px;
+    }
+
+    nav a:nth-child(4) {
+        width: 100px;
+    }
+
+    nav .animation {
+        position        : absolute;
+        height          : 100%;
+        background-color: #F97F51;
+        z-index         : 9;
+        border-radius   : 8px;
+        transition: all 0.3s;
+        left: 310px;
+    }
+
+    .start-home,
+    nav a:nth-child(1):hover~.animation {
+        width: 100px;
+        left : 0px;
+    }
+    .start-about,
+    nav a:nth-child(2):hover~.animation {
+        width: 110px;
+        left : 100px;
+    }
+    .start-blog,
+    nav a:nth-child(3):hover~.animation {
+        width: 100px;
+        left : 210px;
+    }
+    .start-protfolio,
+    nav a:nth-child(4):hover~.animation {
+        width: 100px;
+        left : 310px;
+    }
+
+
+   
+/*加载画面*/
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: fixed;
+            flex-direction: column;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #f7f7f7;
+            z-index: 100000000;
+            transition: 1s ease;
+        }
+
+        .loading svg {
+            width: 5rem;
+            margin-bottom: 2rem;
+            overflow: visible;
+            transition: 0.3s ease;
+        }
+
+        .loading svg circle {
+            fill: none;
+            stroke: #171717;
+            stroke-width: 12;
+            stroke-dasharray: 160;
+            stroke-dashoffset: 160;
+            transform-origin: center;
+            animation: circle_rotate 3s ease-in infinite;
+        }
+
+        @keyframes circle_rotate {
+            0% {
+                transform: rotate(0deg);
+                stroke-dashoffset: 160;
+            }
+
+            100% {
+                transform: rotate(360deg);
+                stroke-dashoffset: -160;
+            }
+        }
+
+        .loading p {
+            font-family: sans-serif;
+            font-size: 2rem;
+            color: #171717;
+            font-weight: 900;
+            transition: 0.3s ease;
+        }
+
+        .loading_out {
+            transform: translateY(100%);
+        }
+
+        .loading_out svg,
+        .loading_out p {
+            opacity: 0;
+        }
+
+
+        .bg-video{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height:100%;
+            object-fit:cover;
+            z-index:-1;
+        }
+
+         /* 右边logo设计 */
+    .contact-group {
+      position: fixed;
+      right: 50px;    /* 距离页面右侧的距离 */
+      top: 0%;       /* 距离页面顶部的距离，可按需调整 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 9999;  /* 确保层级最高，不被遮挡 */
+    }
+
+    .vertical-line.top-line {
+      width: 2px;
+      height: 300px;  /* 竖线长度，可按需调整 */
+      background:#cccccc94 ; 
+      margin-bottom: -105px; /* 竖线与文字的间距 */
+    }
+    .vertical-line.bottom-line{
+      width: 2px;
+      height:500px;
+      background: #cccccc94; 
+      margin-top: 110px; /* 竖线与文字的间距 */
+    }
+
+    .contact-text {
+      writing-mode: vertical-rl;  /* 文字垂直排列 */
+      text-orientation: mixed;
+      font-size: 16px;
+      color: #fff;   /* 文字颜色，适配深色背景 */
+      opacity: 0.9;
+      margin-left: 25px;
+    }
+    /*右边logo*/
+    .contact-img{
+      width:55px;
+      height: auto;
+      opacity:0.8;
+      transition: transform 0.3s ease;;
+      margin-top:40px;
+      filter:grayscale(100%);/* 鼠标悬停可通过滤镜调节颜色 */
+    }
+    .contact-img:hover{
+      transform: scale(1.1);
+      filter:grayscale(0%)sepia(100%)hue-rotate(180deg);
+    }
+    .first-img{
+      margin-top: 70px;
+    }
+
+    
+
+
+        
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2 id="question"></h2>
+        <div id="options">
+            <div class="option" onclick="checkAnswer(0)"></div>
+            <div class="option" onclick="checkAnswer(1)"></div>
+            <div class="option" onclick="checkAnswer(2)"></div>
+            <div class="option" onclick="checkAnswer(3)"></div>
+        </div>
+        <button id="next-btn" onclick="nextQuestion()">下一题</button>
+    </div>
+
+    <!-- 保留的答案错误弹窗 -->
+    <div class="answer-modal" id="answerModal">
+        <h3>答案错误！</h3>
+        <p id="modalCorrectAnswer"></p>
+        <p><strong>解析：</strong><span id="modalAnalysis"></span></p>
+        <button class="modal-close-btn" onclick="closeModal()">关闭</button>
+    </div>
+
+    <div class="loading">
+        <svg viewbox='0 0 50 50'>
+            <circle r='25' cx='25' cy='25'></circle>
+        </svg>
+        <p style="font-size: 4vmin; margin-top: 0px;">LOADING</p>
+    </div>
+
+    <div class="title">
+        <nav>
+             <a onclick="loading.in('index.html')" >首页</a>
+            <a onclick="loading.in('sye2.html')" >星际故事</a>
+            <a onclick="loading.in('w.html')">太阳系</a>
+            <a onclick="loading.in('text4.html')">星际知识</a>
+            
+            
+            <div class="animation start-home"></div>
+        </nav>
+    </div>
+    
+     <video class="bg-video" autoplay loop muted playsinline>
+        <source src="tupian/背景3.mp4" type="video/mp4">
+        您的浏览器不支持视频播放
+    </video>
+    
+    <div class="contact-group">
+    <div class="vertical-line top-line"></div>
+    <div class="contact-text">CONTACT&nbsp;&nbsp; US</div>
+
+    <img src="tupian/wx1.png" alt="wx logo" class="contact-img first-img">
+    <img src="tupian/wb1.png" alt="wb logo" class="contact-img">
+    <img src="tupian/blbl1.png" alt="blbl logo" class="contact-img">
+    <img src="tupian/qq1.png" alt="qq logo" class="contact-img">
+    <img src="tupian/dy1.png" alt="dy logo" class="contact-img">
+    <div class="vertical-line bottom-line"></div>
+  </div>
+
+    <script>
+        // 太空科普题库
+        const questions = [
+            {
+                title: "宇宙中最常见的元素是什么？",
+                options: ["氧", "铁", "氢", "碳"],
+                answer: 2,
+                analysis: "氢是宇宙中最丰富的元素，约占宇宙总质量的75%，是恒星等天体的主要组成成分。"
+            },
+            {
+                title: "以下哪种天体不属于行星？",
+                options: ["木星", "冥王星", "土星", "水星"],
+                answer: 1,
+                analysis: "冥王星目前被归类为矮行星，2006年国际天文学联合会重新定义行星后，它不再属于传统行星范畴。"
+            },
+            {
+                title: "航天器进入轨道主要依靠什么？",
+                options: ["火箭推力", "地球引力", "惯性", "反冲力"],
+                answer: 0,
+                analysis: "航天器进入预定轨道，主要依靠火箭推力提供足够的初始速度，突破地球引力束缚进入轨道运行。"
+            },
+            {
+                title: "哈勃空间望远镜的主要成就不包括以下哪项？",
+                options: ["测量宇宙膨胀速率", "拍摄黑洞照片", "观测遥远星系", "验证宇宙膨胀理论"],
+                answer: 1,
+                analysis: "首张黑洞照片是由事件视界望远镜（EHT）拍摄的，哈勃望远镜的主要成就包括测量宇宙膨胀速率、观测遥远星系等。"
+            },
+            {
+                title: "月球会有圆缺变化的原因是？",
+                options: ["月球自身发光", "地球遮挡阳光", "月球公转导致太阳照射面变化", "月球自转导致"],
+                answer: 2,
+                analysis: "月球本身不发光，我们看到的月光是反射太阳光。月球绕地球公转时，太阳、地球和月球的相对位置不断变化，导致我们看到的月球照亮面呈现不同形状，即圆缺变化。"
+            },
+            {
+                title: "航天器进入轨道主要依靠什么？",
+                 options: ["火箭推力", "地球引力", "惯性", "反冲力"],
+                 answer: 0,
+                 analysis: "航天器进入预定轨道，主要依靠火箭推力提供足够的初始速度，突破地球引力束缚进入轨道运行。"
+             }
+         ];
+         let currentQuestionIndex = 0;
+         let isAnswered = false;
+         const answerModal = document.getElementById("answerModal");
+         const modalCorrectAnswer = document.getElementById("modalCorrectAnswer");
+         const modalAnalysis = document.getElementById("modalAnalysis");
+         const nextBtn = document.getElementById("next-btn");
+         // 初始化显示第一题
+         window.onload = function() {
+             showQuestion(currentQuestionIndex);
+         };
+         // 显示当前题目
+         function showQuestion(index) {
+             const question = questions[index];
+             document.getElementById("question").textContent = question.title;
+             const optionElements = document.querySelectorAll(".option");
+             optionElements.forEach((el, i) => {
+                 el.textContent = question.options[i];
+                 el.classList.remove("correct", "wrong");
+                 el.style.pointerEvents = "auto";
+             });
+             nextBtn.style.display = "none";
+             isAnswered = false;
+             answerModal.style.display = "none";
+         }
+         // 检查答案
+         function checkAnswer(selectedIndex) {
+             if (isAnswered) return;
+             isAnswered = true;
+             const question = questions[currentQuestionIndex];
+             const optionElements = document.querySelectorAll(".option");
+             
+             // 标记对错选项
+             if (selectedIndex === question.answer) {
+                 optionElements[selectedIndex].classList.add("correct");
+             } else {
+                 optionElements[selectedIndex].classList.add("wrong");
+                 optionElements[question.answer].classList.add("correct");
+                 
+                 // 显示保留的弹窗
+                 modalCorrectAnswer.textContent = `正确答案：${question.options[question.answer]}`;
+                 modalAnalysis.textContent = question.analysis;
+                 answerModal.style.display = "block";
+             }
+             // 禁用选项点击，显示下一题按钮
+             optionElements.forEach(el => el.style.pointerEvents = "none");
+             nextBtn.style.display = "block";
+         }
+         // 关闭弹窗
+         function closeModal() {
+             answerModal.style.display = "none";
+         }
+         // 跳转到下一题
+         function nextQuestion() {
+             closeModal();
+             currentQuestionIndex++;
+             if (currentQuestionIndex < questions.length) {
+                 showQuestion(currentQuestionIndex);
+             } else {
+                 alert("恭喜你完成所有题目！");
+                 currentQuestionIndex = 0;
+                 showQuestion(currentQuestionIndex);
+             }
+         }
+     </script>
+     <script>
+    
+    const loading = {
+        container: document.querySelector(".loading"),
+        in(target) {
+            this.container.classList.remove("loading_out");
+            setTimeout(() => {
+                window.location.href = target;
+            }, 1000)
+        },
+        out() {
+            this.container.classList.add("loading_out");
+        }
+    };
+    window.addEventListener("load", () => {
+        loading.out();
+    })
+</script>
+ </body>
+ </html>

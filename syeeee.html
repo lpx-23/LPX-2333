@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>星云</title>
+</head>
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+    }
+    /*导航栏*/
+    .title{
+        position: fixed;
+        top: 4%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 99;
+       
+    }
+    nav {
+        position        : relative;
+        width           : 410px;
+        height          : 50px;
+        background-color: #fff;
+        border-radius   : 8px;
+        box-shadow      : 0 2px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    nav a {
+        position   : relative;
+        display    : block;
+        float      : left;
+        font-size  : 15px;
+        line-height: 50px;
+
+        height             : 50px;
+        color              : rgb(70,100,180);
+        text-transform     : uppercase;
+        text-decoration    : none;
+        text-align         : center;
+        z-index            : 10;
+    }
+
+    nav a:nth-child(1) {
+        width: 100px;
+    }
+
+    nav a:nth-child(2) {
+        width: 110px;
+    }
+
+    nav a:nth-child(3) {
+        width: 100px;
+    }
+
+    nav a:nth-child(4) {
+        width: 100px;
+    }
+
+    nav .animation {
+        position        : absolute;
+        height          : 100%;
+        background-color: #F97F51;
+        z-index         : 9;
+        border-radius   : 8px;
+        transition: all 0.3s;
+        left: 210px;
+    }
+
+    .start-home,
+    nav a:nth-child(1):hover~.animation {
+        width: 100px;
+        left : 0px;
+    }
+    .start-about,
+    nav a:nth-child(2):hover~.animation {
+        width: 110px;
+        left : 100px;
+    }
+    .start-blog,
+    nav a:nth-child(3):hover~.animation {
+        width: 100px;
+        left : 210px;
+    }
+    .start-protfolio,
+    nav a:nth-child(4):hover~.animation {
+        width: 100px;
+        left : 310px;
+    }
+    
+    .shell{
+        height: 100vh;
+        overflow-x: hidden;
+        perspective: 3px;
+    }
+    .shell div{
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-style: 30px;
+        letter-spacing: 2px;
+    }
+    .image{
+        transform: translateZ(-1px) scale(1.6);
+        background-size: cover;
+        height: 100vh;
+        z-index: -1;
+    }
+    .text{
+        height: 20vh;
+        background-color: #fff;
+        padding: 200px;
+    }
+    .text h1{
+        color: #000;
+    }
+
+    .heading{
+        z-index: -1;
+        transform: translateY(-30vh) translateZ(1px);
+        color: #fff;
+        font-size: 30px;
+    }
+
+   /*加载画面*/
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: fixed;
+            flex-direction: column;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #f7f7f7;
+            z-index: 100000000;
+            transition: 1s ease;
+        }
+
+        .loading svg {
+            width: 5rem;
+            margin-bottom: 2rem;
+            overflow: visible;
+            transition: 0.3s ease;
+        }
+
+        .loading svg circle {
+            fill: none;
+            stroke: #171717;
+            stroke-width: 12;
+            stroke-dasharray: 160;
+            stroke-dashoffset: 160;
+            transform-origin: center;
+            animation: circle_rotate 3s ease-in infinite;
+        }
+
+        @keyframes circle_rotate {
+            0% {
+                transform: rotate(0deg);
+                stroke-dashoffset: 160;
+            }
+
+            100% {
+                transform: rotate(360deg);
+                stroke-dashoffset: -160;
+            }
+        }
+
+        .loading p {
+            font-family: sans-serif;
+            font-size: 2rem;
+            color: #171717;
+            font-weight: 900;
+            transition: 0.3s ease;
+        }
+
+        .loading_out {
+            transform: translateY(100%);
+        }
+
+        .loading_out svg,
+        .loading_out p {
+            opacity: 0;
+        }
+        
+
+</style>
+
+<body>
+    <div class="loading">
+        <svg viewbox='0 0 50 50'>
+            <circle r='25' cx='25' cy='25'></circle>
+        </svg>
+        <p style="font-size: 4vmin; margin-top: 0px;">LOADING</p>
+    </div>
+    <div class="shell">
+        <div class="image" style="background-image: url('./image/猎户座.jpg');background-position: center 15500px;"></div>
+        <div class="heading">
+            <h1>猎户座星云</h1>
+        </div>
+        <div class="text">
+            <h1>猎户座星云（M42）是位于猎户座的弥漫星云，又称“火鸟星云”，距离地球约1344-1500光年，直径20-40光年，质量约为2000个太阳质量（部分数据提及100倍或10万倍太阳质量，核心指向“远大于太阳”）。它亮度极高，全天仅次于船底座星云（或卡利纳星云），在无光害地区肉眼可见，呈模糊光斑，用望远镜可观测更多细节，是冬季夜空中的热门观测目标，最佳观测期为12月至次年4月。</h1>
+        </div>
+
+        <div class="image" style="background-image: url('./image/蝴蝶星云.jpg');background-position: center 15500px;"></div>
+        <div class="heading">
+            <h1>蝴蝶星云</h1>
+        </div>
+        <div class="text">
+            <h1>蝴蝶星云(M2-9)：位于天蝎座，距离地球约2100光年，是由垂死恒星释放外层物质形成的行星状星云。核心为密近双星系统，主星即将成为白矮星，另一颗恒星影响星云对称性，使喷出气体沿特定方向膨胀，形成双叶“翅膀”；它既是恒星消亡的遗迹，其物质也可能成为未来新恒星的“养料”。</h1>
+        </div>
+
+        <div class="image" style="background-image: url('./image/巨蟹座星云.jpg');background-position: center 9500px;"></div>
+        <div class="heading">
+            <h1>巨蟹座星云</h1>
+        </div>
+        <div class="text">
+            <h1>巨蟹座星云（M44），是位于巨蟹座的大型稀疏星团，距离地球约577光年，亮度较弱（需望远镜观测），外观形似花朵或蜂巢，也被称为“积尸气”。
+- 核心构成：包含数百颗恒星，成员恒星形成于同一时期（年龄约6亿年，比太阳年轻），化学成分与演化历史相似，还存在棕矮星（介于行星与恒星间，无法进行核聚变）和白矮星（恒星演化末期产物，质量小、密度极高）。</h1>
+        </div>
+
+        <div class="image" style="background-image: url('./image/马头星云.jpg');background-position: center 15500px;"></div>
+        <div class="heading">
+            <h1>马头星云</h1>
+        </div>
+        <div class="text">
+            <h1>因酷似骏马头部轮廓得名，高度达1光年；黑暗区域由密集尘埃和氢气构成，与“创生之柱”成分相似，背景是明亮的发射星云IC434，其黑暗是尘埃云遮挡背后星光所致，拉近观察时会呈现红色光辉。底部左侧阴影由马颈遮挡形成，大量气体正从星云中飞离，源于贯穿星云的强大磁场推动；底部发光亮点是处于新生阶段的年轻恒星，恒星的辐射与星风还会影响星云周围环境。</h1>
+        </div>
+    </div>
+
+    <div class="title">
+        <nav>
+            <a onclick="loading.in('index.html')" >首页</a>
+            <a onclick="loading.in('sye2.html')" >星际故事</a>
+            <a onclick="loading.in('w.html')">太阳系</a>
+            <a onclick="loading.in('text4.html')">星际知识</a>
+            
+            
+            
+            <div class="animation start-home"></div>
+        </nav>
+    </div>
+
+    
+</body>
+<script>
+    
+    const loading = {
+        container: document.querySelector(".loading"),
+        in(target) {
+            this.container.classList.remove("loading_out");
+            setTimeout(() => {
+                window.location.href = target;
+            }, 1000)
+        },
+        out() {
+            this.container.classList.add("loading_out");
+        }
+    };
+    window.addEventListener("load", () => {
+        loading.out();
+    })
+</script>
+</html>
