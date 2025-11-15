@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap");
+
+        * {
+            box-sizing: border-box;
+            margin: auto;
+        }
+
+        body {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            font-family: "Yeseva One";
+        }
+
+        video {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .shell {
+            position: relative;
+            max-width: 100vh;
+            aspect-ratio: 1/1;
+            display: flex;
+            border-radius: 50%;
+            overflow: hidden;
+            text-align: center;
+            filter: drop-shadow(-30px 30px 10px #006e9d);
+        }
+
+        .text-wrapper {
+            font-size: 110px;
+        }
+
+        span.wave {
+            background: -50% 0%/200% 100% linear-gradient(90deg, #32967048, #0a26ff, #32967048);
+            color: transparent;
+            background-clip: text;
+            animation: flow 4s linear infinite;
+            padding: 0 70px;
+        }
+
+        .text-author {
+            font-size: 80px;
+            text-align: right;
+        }
+
+        .box {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+        }
+
+        .box:nth-of-type(1) {
+            height: 35%;
+            opacity: 0.6;
+        }
+
+        .box:nth-of-type(2) {
+            height: 67%;
+            opacity: 0.5;
+        }
+
+        .box:nth-of-type(3) {
+            height: 93%;
+            opacity: 0.4;
+        }
+
+        .wave {
+            -webkit-mask: radial-gradient(46.6px at 50% calc(100% - (27px + 38px)),
+                    #fff 99%, #ffffff00 101%), radial-gradient(46.6px at 50% calc(100% + 38px),
+                    #ffffff00 99%, #fff 101%) repeat-x;
+            
+            -webkit-mask-size: calc(4*27px) 100%;
+            
+            -webkit-mask-position: calc(50% - 2*27px) 0, 50% calc(100% - 27px);
+            animation: flow 5s linear infinite;
+        }
+
+        @keyframes flow {
+            100% {
+                
+                -webkit-mask-position: calc(50% - 6*27px) 0, calc(50% - 4*27px) calc(200% - 27px);
+            }
+        }
+
+/*导航栏*/
+    .title{
+        position: fixed;
+        top: 4%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 99;
+       
+    }
+    nav {
+        position        : relative;
+        width           : 410px;
+        height          : 50px;
+        background-color: #fff;
+        border-radius   : 8px;
+        box-shadow      : 0 2px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    nav a {
+        position   : relative;
+        display    : block;
+        float      : left;
+        font-size  : 15px;
+        line-height: 50px;
+
+        height             : 50px;
+        color              : rgb(70,100,180);
+        text-transform     : uppercase;
+        text-decoration    : none;
+        text-align         : center;
+        z-index            : 10;
+    }
+
+    nav a:nth-child(1) {
+        width: 100px;
+    }
+
+    nav a:nth-child(2) {
+        width: 110px;
+    }
+
+    nav a:nth-child(3) {
+        width: 100px;
+    }
+
+    nav a:nth-child(4) {
+        width: 100px;
+    }
+
+    nav .animation {
+        position        : absolute;
+        height          : 100%;
+        background-color: #F97F51;
+        z-index         : 9;
+        border-radius   : 8px;
+        transition: all 0.3s;
+    }
+
+    .start-home,
+    nav a:nth-child(1):hover~.animation {
+        width: 100px;
+        left : 0px;
+    }
+    .start-about,
+    nav a:nth-child(2):hover~.animation {
+        width: 110px;
+        left : 100px;
+    }
+    .start-blog,
+    nav a:nth-child(3):hover~.animation {
+        width: 100px;
+        left : 210px;
+    }
+    .start-protfolio,
+    nav a:nth-child(4):hover~.animation {
+        width: 100px;
+        left : 310px;
+    }
+
+
+   
+/*加载画面*/
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: fixed;
+            flex-direction: column;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #f7f7f7;
+            z-index: 100000000;
+            transition: 1s ease;
+        }
+
+        .loading svg {
+            width: 5rem;
+            margin-bottom: 2rem;
+            overflow: visible;
+            transition: 0.3s ease;
+        }
+
+        .loading svg circle {
+            fill: none;
+            stroke: #171717;
+            stroke-width: 12;
+            stroke-dasharray: 160;
+            stroke-dashoffset: 160;
+            transform-origin: center;
+            animation: circle_rotate 3s ease-in infinite;
+        }
+
+        @keyframes circle_rotate {
+            0% {
+                transform: rotate(0deg);
+                stroke-dashoffset: 160;
+            }
+
+            100% {
+                transform: rotate(360deg);
+                stroke-dashoffset: -160;
+            }
+        }
+
+        .loading p {
+            font-family: sans-serif;
+            font-size: 2rem;
+            color: #171717;
+            font-weight: 900;
+            transition: 0.3s ease;
+        }
+
+        .loading_out {
+            transform: translateY(100%);
+        }
+
+        .loading_out svg,
+        .loading_out p {
+            opacity: 0;
+        }
+        
+        
+    </style>
+</head>
+
+<body>
+    <div class="loading">
+        <svg viewbox='0 0 50 50'>
+            <circle r='25' cx='25' cy='25'></circle>
+        </svg>
+        <p style="font-size: 4vmin; margin-top: 0px;">LOADING</p>
+    </div>
+
+    <div class="title">
+        <nav>
+            <a onclick="loading.in('index.html')" >首页</a>
+            <a onclick="loading.in('sye2.html')" >星际故事</a>
+            <a onclick="loading.in('w.html')">太阳系</a>
+            <a onclick="loading.in('text4.html')">星际知识</a>
+            
+            
+            <div class="animation start-home"></div>
+        </nav>
+    </div>
+
+    <div class="shell">
+        <div class="box wave"></div>
+        <div class="box wave"></div>
+        <div class="box wave"></div>
+        <div class="text-wrapper">
+            <div class="text-content">
+                <span class="wave">当“水的涟漪”,</span>
+                <br>
+                <span class="wave">漫向星际.</span>
+            </div>
+            <div class="text-author">
+                <span class="wave" >- Stellar Tide Observer.</span>
+            </div>
+        </div>
+    </div>
+
+    
+    <video autoplay loop muted>
+        <source src="./tupian/合成 3.mp4">
+    </video>
+
+</body>
+<script>
+    
+    const loading = {
+        container: document.querySelector(".loading"),
+        in(target) {
+            this.container.classList.remove("loading_out");
+            setTimeout(() => {
+                window.location.href = target;
+            }, 1000)
+        },
+        out() {
+            this.container.classList.add("loading_out");
+        }
+    };
+    window.addEventListener("load", () => {
+        loading.out();
+    })
+</script>
+
+</html>
